@@ -108,6 +108,10 @@ def mlfq_multicore(numJobs=3,iquantum=10,iallotment=1,boost=0,ioTime=5):
     indcore = 0
     count = 0
     countcore = 1
+    print('Job List:')
+    for i in range(numJobs):
+        print('  Job %2d: startTime %3d - runTime %3d - ioFreq %3d' % (i, job[i]['startTime'], job[i]['runTime'], job[i]['ioFreq']))
+    print('')
     print('\nExecution Trace:\n')
     #Execution Trace
     for j in range(1,len(job)+1) :
@@ -276,6 +280,19 @@ def mlfq_multicore(numJobs=3,iquantum=10,iallotment=1,boost=0,ioTime=5):
                     if issuedIO == False:
                         queue[currQueue].append(currJob)
         countcore+=1
-        #print(job)
+    # print out statistics
+    print('')
+    print('Final statistics:')
+    responseSum   = 0
+    turnaroundSum = 0
+    for i in range(numJobs):
+        response   = (job[i]['firstRun']) - (job[i]['startTime'])
+        turnaround = (job[i]['endTime'] )- (job[i]['startTime'])
+        print('  Job %2d: startTime %3d - response %3d - turnaround %3d' % (i, job[i]['startTime'], response, turnaround))
+        responseSum   += response
+        turnaroundSum += turnaround
+
+    print('\n  Avg %2d: startTime n/a - response %.2f - turnaround %.2f' % (i, float(responseSum)/numJobs, float(turnaroundSum)/numJobs))
+    print('\n')
     return (job,cores)
 
